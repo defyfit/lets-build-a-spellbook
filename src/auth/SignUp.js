@@ -1,25 +1,29 @@
-import './Login.css'
+import './SignUp.css'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col, Card, CardHeader, CardBlock, Alert } from 'reactstrap'
+import { Redirect, Link } from 'react-router-dom'
 import { graphql } from 'react-apollo'
 import { connect } from 'react-redux'
-import { Redirect, Link } from 'react-router-dom'
 
 import AuthService from './service'
-import { login, loginSuccess, loginError } from './actions'
-import LoginForm from './LoginForm'
+import { signUp, signUpSuccess, signUpError } from './actions'
+import SignUpForm from './SignUpForm'
 
-class Login extends Component {
-  handleLoginAttempt = (data) => {
-    this.props.dispatch(login())
+class SignUp extends Component {
+  handleRegistrationAttempt = (data) => {
+    if (data.name === '' || data.email === '' || data.password === '') {
+      return false
+    }
+
+    this.props.dispatch(signUp())
 
     this.props.mutate({
       variables: data
-    }).then((response) => {
-      this.props.dispatch(loginSuccess(response.data.signinUser))
+    }).then(() => {
+      this.props.dispatch(signUpSuccess())
     }).catch((error) => {
-      this.props.dispatch(loginError(error.message))
+      this.props.dispatch(signUpError(error.message))
     })
   }
 
@@ -28,28 +32,26 @@ class Login extends Component {
       return <Redirect to="/app"/>
     }
 
+    if (this.props.signedUp) {
+      return <Redirect to="/login"/>
+    }
+
     let errorMessage = null
     if (this.props.error !== null) {
       errorMessage = <Alert color="danger">{this.props.error}</Alert>
     }
 
-    let justSignedUp = null
-    if (this.props.signedUp) {
-      justSignedUp = <Alert color="success">Welcome! Login below.</Alert>
-    }
-
     return (
-      <Container className="login-container">
+      <Container className="sign-up-container">
         <Row>
           <Col>
             <Card>
-              <CardHeader>Login</CardHeader>
+              <CardHeader>Sign Up</CardHeader>
               <CardBlock>
-                {justSignedUp}
                 {errorMessage}
-                <LoginForm loading={this.props.loggingIn} onSubmit={this.handleLoginAttempt}/>
+                <SignUpForm loading={this.props.signingIn} onSubmit={this.handleRegistrationAttempt}/>
                 <p className="text-center mb-0 mt-4">
-                  <Link to="/sign-up">Need to register?</Link>
+                  <Link to="/login">Already have an account?</Link>
                 </p>
               </CardBlock>
             </Card>
@@ -60,23 +62,23 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
+SignUp.propTypes = {
   error: PropTypes.string,
-  loggingIn: PropTypes.bool.isRequired,
+  signingIn: PropTypes.bool.isRequired,
   signedUp: PropTypes.bool.isRequired,
   token: PropTypes.string
 }
 
 const mapStateToProps = (state) => {
   return {
-    error: state.auth.error,
-    loggingIn: state.auth.loggingIn,
+    error: state.auth.signUpError,
+    signingIn: state.auth.signingUp,
     signedUp: state.auth.signedUp,
     token: state.auth.token
   }
 }
 
-const withLoginUserMutation = graphql(AuthService.loginUser)(Login)
-const withReduxConnection = connect(mapStateToProps)(withLoginUserMutation)
+const withSignUpUserMutation = graphql(AuthService.registerUser)(SignUp)
+const withReduxConnection = connect(mapStateToProps)(withSignUpUserMutation)
 
 export default withReduxConnection
