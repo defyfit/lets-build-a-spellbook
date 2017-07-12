@@ -1329,7 +1329,7 @@ clap@^1.0.9:
   dependencies:
     chalk "^1.1.3"
 
-classnames@^2.2.3, classnames@^2.2.5:
+classnames@^2.2.3:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -5180,15 +5180,14 @@ react-scripts@1.0.10:
   optionalDependencies:
     fsevents "1.1.2"
 
-react-transition-group@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.0.2.tgz#894012704fd2d2dc57cf5e377f9d182f3c306402"
+react-transition-group@^1.1.2:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-1.2.0.tgz#b51fc921b0c3835a7ef7c571c79fc82c73e9204f"
   dependencies:
     chain-function "^1.0.0"
-    classnames "^2.2.5"
     dom-helpers "^3.2.0"
     loose-envify "^1.3.1"
-    prop-types "^15.5.8"
+    prop-types "^15.5.6"
     warning "^3.0.0"
 
 react@^15.6.1:
