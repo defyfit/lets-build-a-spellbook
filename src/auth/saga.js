@@ -11,7 +11,7 @@ function * fetchUserProfile (action) {
     })
     yield put(getAuthUserSuccess(result.data.user))
   } catch (e) {
-    put(getAuthUserFail(e.message))
+    yield put(getAuthUserFail(e.message))
   }
 }
 
